@@ -145,6 +145,7 @@ public class TaskServlet extends HttpServlet {
             String attribute = request.getParameter("attribute");
             int priority = Integer.valueOf(request.getParameter("priority"));
             int user = Integer.valueOf(request.getParameter("user"));
+            int requiredBy = Integer.valueOf(request.getParameter("requiredBy"));
 
             List<Task> tasks = session.createQuery("from Task").list();
 
@@ -163,6 +164,13 @@ public class TaskServlet extends HttpServlet {
                 }
                 else {
                     Collections.sort(tasks, (Task a, Task b) -> b.getUser().getUsername().compareTo(a.getUser().getUsername()));
+                }
+            }
+            if(requiredBy != 0){
+                if(requiredBy % 2 == 0){
+                    Collections.sort(tasks, (a, b) -> a.getRequiredBy().compareTo(b.getRequiredBy()));
+                }else{
+                    Collections.sort(tasks, (a, b) -> b.getRequiredBy().compareTo(a.getRequiredBy()));
                 }
             }
 

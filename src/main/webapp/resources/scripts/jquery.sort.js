@@ -1,5 +1,6 @@
 var priority = 0;
 var user = 0;
+var requiredBy = 0;
 function sort(attribute, elem){
     $(elem).find('span').remove();
 
@@ -25,6 +26,17 @@ function sort(attribute, elem){
             $(elem).append($('<span>', { text: '▼' }));
         }
     }
+    if(attribute == "requiredBy"){
+        requiredBy++;
+        if(user % 2 == 0){
+            // ASCENDING
+            $(elem).append($('<span>', { text: '▲' }));
+        }
+        else {
+            // DESC
+            $(elem).append($('<span>', { text: '▼' }));
+        }
+    }
 
     $.ajax({
         type: "POST",
@@ -34,6 +46,7 @@ function sort(attribute, elem){
             attribute: attribute,
             priority: priority,
             user: user,
+            requiredBy: requiredBy
         },
         success: function(tasks){
             if(tasks != "error"){
@@ -62,7 +75,6 @@ function renderTable() {
 }
 
 $(function(){
-
     $('table th[data-sortable="true"]').hover(function(){
         $(this).css({ cursor: 'pointer' });
     })
