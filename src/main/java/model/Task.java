@@ -12,7 +12,7 @@ public class Task implements Serializable {
     private long id;
     @OneToOne
     private User user;
-    private String name;
+    private String task;
     private String dueDate;
     private String category;
     private PRIORITY priority;
@@ -21,8 +21,8 @@ public class Task implements Serializable {
         this.user = null;
     }
 
-    public Task(String name, String dueDate, String category){
-        this.name = name;
+    public Task(String task, String dueDate, String category){
+        this.task = task;
         this.dueDate = dueDate;
         this.category = category;
     }
@@ -31,12 +31,12 @@ public class Task implements Serializable {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getTask() {
+        return task;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTask(String task) {
+        this.task = task;
     }
 
     public String getDueDate() {
