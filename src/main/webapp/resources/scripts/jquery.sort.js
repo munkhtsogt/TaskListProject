@@ -28,7 +28,7 @@ function sort(attribute, elem){
     }
     if(attribute == "requiredBy"){
         requiredBy++;
-        if(user % 2 == 0){
+        if(requiredBy % 2 == 0){
             // ASCENDING
             $(elem).append($('<span>', { text: '▲' }));
         }
