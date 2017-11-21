@@ -1,8 +1,6 @@
 package utility;
 
-import model.PRIORITY;
 import model.Task;
-import model.User;
 
 import java.util.ArrayList;
 

@@ -13,18 +13,22 @@ public class Task implements Serializable {
     @OneToOne
     private User user;
     private String task;
-    private String dueDate;
+    private String requiredBy;
     private String category;
-    private PRIORITY priority;
+    private Boolean isCompleted;
+    private String priority;
 
     public Task(){
         this.user = null;
+        this.isCompleted = false;
     }
 
-    public Task(String task, String dueDate, String category){
+    public Task(String task, String requiredBy, String category){
         this.task = task;
-        this.dueDate = dueDate;
+        this.requiredBy = requiredBy;
         this.category = category;
+        this.user = null;
+        this.isCompleted = false;
     }
 
     public long getId() {
@@ -39,12 +43,12 @@ public class Task implements Serializable {
         this.task = task;
     }
 
-    public String getDueDate() {
-        return dueDate;
+    public String getRequiredBy() {
+        return requiredBy;
     }
 
-    public void setDueDate(String dueDate) {
-        this.dueDate = dueDate;
+    public void setRequiredBy(String dueDate) {
+        this.requiredBy = dueDate;
     }
 
     public String getCategory() {
@@ -55,11 +59,27 @@ public class Task implements Serializable {
         this.category = category;
     }
 
-    public PRIORITY getPriority() {
+    public String getPriority() {
         return priority;
     }
 
-    public void setPriority(PRIORITY priority) {
+    public void setPriority(String priority) {
         this.priority = priority;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Boolean getCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(Boolean completed) {
+        isCompleted = completed;
     }
 }

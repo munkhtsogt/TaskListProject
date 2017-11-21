@@ -19,6 +19,10 @@
 	<section id="taskCreation" class="not">
 		<form id="taskForm">
 			<input type="hidden" name="id"/>
+            <div>
+                <label>User</label>
+                <select id="userId" name="userId"></select>
+            </div>
 			<div>
 				<label>Task</label> <input type="text" required="required"
 					name="task" class="large" placeholder="Breakfast at Tiffanys" maxlength="200"  />
@@ -71,6 +75,7 @@ function initScreen() {
 	$(document).ready(function() {
 		tasksController.init($('#taskPage'), function() {
 			tasksController.loadTasks();
+			tasksController.loadUsers();
 		});		
 	});
 }
@@ -111,7 +116,10 @@ if (window.indexedDB) {
 	</td>
 </tr>
 </script>
-
-
+<script id="taskUser" type="text/x-jQuery-tmp">
+<option value="${id}">
+    ${username}
+</option>
+</script>
 </html>
 
