@@ -15,12 +15,12 @@ public class Task implements Serializable {
     private String task;
     private String requiredBy;
     private String category;
-    private Boolean isCompleted;
+    private Boolean complete;
     private String priority;
 
     public Task(){
         this.user = null;
-        this.isCompleted = false;
+        this.complete = false;
     }
 
     public Task(String task, String requiredBy, String category){
@@ -28,7 +28,7 @@ public class Task implements Serializable {
         this.requiredBy = requiredBy;
         this.category = category;
         this.user = null;
-        this.isCompleted = false;
+        this.complete = false;
     }
 
     public long getId() {
@@ -75,11 +75,11 @@ public class Task implements Serializable {
         this.user = user;
     }
 
-    public Boolean getCompleted() {
-        return isCompleted;
+    public Boolean getComplete() {
+        return complete;
     }
 
-    public void setCompleted(Boolean completed) {
-        isCompleted = completed;
+    public void setComplete(Boolean completed) {
+        complete = completed;
     }
 }

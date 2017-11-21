@@ -1,6 +1,8 @@
 package utility;
 
+import model.Task;
 import model.User;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
@@ -27,20 +29,26 @@ public class HibernateUtil {
         getSessionFactory().close();
     }
 
-
     /*
     public static void main(String[] args) {
         SessionFactory factory = getSessionFactory();
         System.out.println("Session factory object created : " + factory);
         try {
-            System.out.println("Session object created : " + factory.openSession());
-            User user = new User();
-            user.setUsername("zi");
-            factory.openSession().save(user);
+            Session session = factory.openSession();
+            System.out.println("Session object created : " + session);
+            Task task = session.load(Task.class,Long.valueOf("2"));
+            System.out.println(task.getTask());
+            task.setComplete(true);
+            System.out.println(task.getComplete());
+            session.beginTransaction();
+            session.update(task);
+            session.getTransaction().commit();
+            session.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     */
+
 
 }

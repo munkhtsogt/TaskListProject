@@ -9,13 +9,17 @@
 		},
 		fromObject: function(obj) {
 			$.each(this.find(':input'), function(i,v) {
-				var name = $(v).attr('name');
-				if (obj[name]) {
-				     $(v).val(obj[name]);
-				 } else {
-					$(v).val('');
-				 }
+                var name = $(v).attr('name');
+                if (obj[name]) {
+                    $(v).val(obj[name]);
+                } else {
+                    $(v).val('');
+                }
 			});
+
+			if(obj.user){
+                $('#userId').val(obj.user.id);
+            }
 		}
 	});
 })(jQuery);

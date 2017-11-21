@@ -18,10 +18,10 @@
 	<main  id="taskPage">
 	<section id="taskCreation" class="not">
 		<form id="taskForm">
-			<input type="hidden" name="id"/>
+			<input type="hidden" name="id" value="" />
             <div>
                 <label>User</label>
-                <select id="userId" name="userId"></select>
+                <select id="userId" name="user"></select>
             </div>
 			<div>
 				<label>Task</label> <input type="text" required="required"
@@ -37,6 +37,14 @@
 					<option value="Work">Work</option>
 				</select>
 			</div>
+            <div>
+                <label>Priority</label>
+                <select name="priority">
+                    <option value="low">Low</option>
+                    <option value="middle">Middle</option>
+                    <option value="high">High</option>
+                </select>
+            </div>
 			<nav>
 				<a href="#" id="saveTask">Save task</a>    <!-- https://stackoverflow.com/questions/4855168/what-is-href-and-why-is-it-used -->
 				<a href="#" id="clearTask">Clear task</a>
@@ -46,16 +54,18 @@
 	<section>
 		<table id="tblTasks">
 			<colgroup>
-				<col width="40%">
-				<col width="15%">
-				<col width="15%">
-				<col width="30%">
+				<col width="16%">
+				<col width="16%">
+				<col width="16%">
+				<col width="16%">
 			</colgroup>
 			<thead>
 				<tr>
 					<th>Name</th>
 					<th>Due</th>
 					<th>Category</th>
+                    <th>Priority</th>
+                    <th>User</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
@@ -74,8 +84,7 @@
 function initScreen() {
 	$(document).ready(function() {
 		tasksController.init($('#taskPage'), function() {
-			tasksController.loadTasks();
-			tasksController.loadUsers();
+			tasksController.loads();
 		});		
 	});
 }
@@ -101,10 +110,12 @@ if (window.indexedDB) {
 </script>
 
 <script id="taskRow" type="text/x-jQuery-tmpl">
-<tr>
+<tr id="task${id}">
 	<td {{if complete == true}}class="taskCompleted"{{/if}}>${task}</td>
 	<td {{if complete == true}}class="taskCompleted"{{/if}}><time datetime="${requiredBy}">${requiredBy}</time></td>
 	<td {{if complete == true}}class="taskCompleted"{{/if}}>${category}</td>
+	<td>${priority}</td>
+	<td>${user.username}</td>
 	<td>
 		<nav>
 			{{if complete != true}}			

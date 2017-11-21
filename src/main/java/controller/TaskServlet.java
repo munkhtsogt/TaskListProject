@@ -1,10 +1,12 @@
 package controller;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import model.Task;
 import model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import utility.HibernateProxyTypeAdapter;
 import utility.HibernateUtil;
 import utility.MockData;
 
@@ -15,50 +17,29 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet("/TaskServlet")
 public class TaskServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Session session = null;
+        SessionFactory factory = HibernateUtil.getSessionFactory();
+        Session session = factory.openSession();
+
+        GsonBuilder gb = new GsonBuilder();
+        gb.registerTypeAdapterFactory(HibernateProxyTypeAdapter.FACTORY);
+        Gson gson = gb.create();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
         PrintWriter out = response.getWriter();
         String method = request.getParameter("method");
-        if(method.equals("create")){
-            String name = request.getParameter("task");
-            Long userId = Long.valueOf(request.getParameter("userId"));
-            String category = request.getParameter("category");
-            String requiredBy = request.getParameter("requiredBy");
-            String priority = request.getParameter("priority");
-
-            Task task = new Task(name, requiredBy, category);
-            task.setPriority(priority);
+        if(method.equals("init")){
             try{
-                SessionFactory factory = HibernateUtil.getSessionFactory();
-                session = factory.openSession();
-
-                User user = session.load(User.class, userId);
-                task.setUser(user);
-
-                session.save(task);
-
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-                out.write(new Gson().toJson(task));
-
-            }catch(Exception e){
-                e.printStackTrace();
-
-            } finally {
-                session.close();
-            }
-        }
-        else if(method.equals("findUsers")){
-            try{
-                SessionFactory factory = HibernateUtil.getSessionFactory();
-                session = factory.openSession();
-
                 List<User> users = session.createQuery("from User").list();
+                List<Task> tasks = session.createQuery("from Task").list();
                 if(users.isEmpty()){
                     User user = new User();
                     user.setUsername("Mogi");
@@ -80,25 +61,94 @@ public class TaskServlet extends HttpServlet {
                     session.save(user2);
                     session.save(user3);
                 }
-
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-                out.write(new Gson().toJson(users));
-            }catch(Exception e){
+                Map<String,Object> map = new HashMap<String,Object>();
+                map.put("tasks", tasks);
+                map.put("users", users);
+                out.write(gson.toJson(map));
+            } catch (Exception e){
+                out.write(gson.toJson("error"));
                 e.printStackTrace();
-
-            } finally {
-                session.close();
             }
         }
+        else if(method.equals("create")){
 
+            String taskId = request.getParameter("taskId");
+            String name = request.getParameter("task");
+            Long userId = Long.valueOf(request.getParameter("userId"));
+            String category = request.getParameter("category");
+            String requiredBy = request.getParameter("requiredBy");
+            String priority = request.getParameter("priority");
+            Task task;
+            if(taskId != null && !taskId.equals("")){
+                task = session.load(Task.class, Long.valueOf(taskId));
+            }
+            else {
+                task = new Task();
+            }
+            task.setTask(name);
+            task.setRequiredBy(requiredBy);
+            task.setCategory(category);
+            task.setPriority(priority);
+            try{
+
+                User user = session.load(User.class, userId);
+                task.setUser(user);
+
+                session.beginTransaction();
+                session.save(task);
+                session.getTransaction().commit();
+                out.write(gson.toJson(task));
+
+            }catch(Exception e) {
+                out.write(gson.toJson("error"));
+                e.printStackTrace();
+            }
+        }
+        else if(method.equals("delete")){
+            Long taskId = Long.valueOf(request.getParameter("taskId"));
+            try{
+                Task task = session.load(Task.class, taskId);
+                session.beginTransaction();
+                session.delete(task);
+                session.getTransaction().commit();
+                out.write(gson.toJson("success"));
+
+            } catch(Exception e){
+                out.write(gson.toJson("error"));
+                e.printStackTrace();
+
+            }
+        }
+        else if(method.equals("complete")){
+            Long taskId = Long.valueOf(request.getParameter("taskId"));
+            try{
+                Task task = session.load(Task.class, taskId);
+                task.setComplete(true);
+                session.beginTransaction();
+                session.update(task);
+                session.getTransaction().commit();
+                out.write(gson.toJson(task));
+
+            } catch(Exception e){
+                out.write(gson.toJson("error"));
+                e.printStackTrace();
+            }
+        }
+        else if(method.equals("findById")){
+            Long taskId = Long.valueOf(request.getParameter("taskId"));
+            try{
+                Task task = session.load(Task.class, taskId);
+                out.write(gson.toJson(task));
+
+            } catch(Exception e){
+                out.write(gson.toJson("error"));
+                e.printStackTrace();
+            }
+        }
+        session.close();
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        User user = new User();
-        user.setUsername("Mogi");
-        user.setEmail("munkhuu48@gmail.com");
 
         PrintWriter out = response.getWriter();
         String JSONtasks;

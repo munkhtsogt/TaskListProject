@@ -85,21 +85,53 @@ tasksController = function() {
 
                 $(taskPage).find('#tblTasks tbody').on('click', '.deleteRow',
                     function(evt) {
-                        storageEngine.delete('task', $(evt.target).data().taskId,
-                            function() {
-                                $(evt.target).parents('tr').remove();
-                                taskCountChanged();
-                            }, errorLogger);
 
+                        var taskId = $(evt.target).data().taskId;
+                        console.log(taskId);
+                        if(confirm("Are you sure to delete?")){
+                            $.ajax({
+                                type: 'POST',
+                                url: 'TaskServlet',
+                                data: {
+                                    method: 'delete',
+                                    taskId: taskId,
+                                },
+                                success: function(response){
+                                    if(response != "error"){
+                                        $(evt.target).parents('tr').remove();
+                                        taskCountChanged();
+                                    }
+                                    else {
+                                        console.log(response);
+                                    }
+                                },
+                                error: function (xhr, status, exception) {
+                                    errorLogger;
+                                }
+                            });
+                        }
                     }
                 );
 
                 $(taskPage).find('#tblTasks tbody').on('click', '.editRow',
                     function(evt) {
                         $(taskPage).find('#taskCreation').removeClass('not');
-                        storageEngine.findById('task', $(evt.target).data().taskId, function(task) {
-                            $(taskPage).find('form').fromObject(task);
-                        }, errorLogger);
+                        $.ajax({
+                            type: "POST",
+                            url: "TaskServlet",
+                            data: {
+                                method: "findById",
+                                taskId: $(evt.target).data().taskId
+                            },
+                            success: function (response) {
+                                if(response != "error"){
+                                    $(taskPage).find('form').fromObject(response);
+                                }
+                                else {
+                                    console.log(response);
+                                }
+                            }
+                        });
                     }
                 );
 
@@ -109,44 +141,67 @@ tasksController = function() {
                 });
 
                 $(taskPage).find('#tblTasks tbody').on('click', '.completeRow', function(evt) {
-                    storageEngine.findById('task', $(evt.target).data().taskId, function(task) {
-                        task.complete = true;
-                        storageEngine.save('task', task, function() {
-                            tasksController.loadTasks();
-                        },errorLogger);
-                    }, errorLogger);
+
+                    $.ajax({
+                       type: "POST",
+                       url: "TaskServlet",
+                       data: {
+                           taskId: $(evt.target).data().taskId,
+                           method: 'complete',
+                       },
+                       success: function (response) {
+                           if(response != "error"){
+                               $(evt.target).parents('tr').remove();
+                               $('#taskRow').tmpl(response).appendTo($(taskPage).find('#tblTasks tbody'));
+                               taskCountChanged();
+                               renderTable();
+                           }
+                           else {
+                               console.log(response);
+                           }
+
+                       },
+                       error: function(xhr, status, exception){
+                           errorLogger;
+                       }
+                    });
                 });
 
                 $(taskPage).find('#saveTask').click(function(evt) {
+                    var event = evt;
                     evt.preventDefault();
                     if ($(taskPage).find('form').valid()) {
                         var task = $(taskPage).find('form').toObject();
-
-                        console.log(task);
-
                         $.ajax({
                             type: 'POST',
                             url: 'TaskServlet',
                             data: {
                                 method: 'create',
-                                userId: task.userId,
+                                taskId: task.id,
+                                userId: task.user,
                                 category: task.category,
                                 task: task.task,
                                 requiredBy: task.requiredBy,
-                                priority: 'low',
+                                priority: task.priority,
                             },
                             success: function (response) {
-                                console.log(response);
+                                if(response != "error"){
+
+                                    // REMOVE EDIT ROW
+                                    if(task.id){
+                                        $('#task' + task.id).remove();
+                                    }
+                                    $('#taskRow').tmpl(response).appendTo($(taskPage).find('#tblTasks tbody'));
+                                    taskCountChanged();
+                                    renderTable();
+                                    clearTask();
+                                    $(taskPage).find('#taskCreation').addClass('not');
+                                }
+                                else {
+                                    console.log(response);
+                                }
                             }
                         });
-
-                        return false;
-                        storageEngine.save('task', task, function() {
-                            $(taskPage).find('#tblTasks tbody').empty();
-                            tasksController.loadTasks();
-                            clearTask();
-                            $(taskPage).find('#taskCreation').addClass('not');
-                        }, errorLogger);
                     }
                 });
                 initialised = true;
@@ -170,6 +225,7 @@ tasksController = function() {
         },
         loadTasks : function() {
             $(taskPage).find('#tblTasks tbody').empty();
+
             storageEngine.findAll('task', function(tasks) {
                 tasks.sort(function(o1, o2) {
                     return Date.parse(o1.requiredBy).compareTo(Date.parse(o2.requiredBy));
@@ -183,20 +239,39 @@ tasksController = function() {
                     renderTable();
                 });
             }, errorLogger);
+
         },
-        loadUsers: function () {
+        loads: function () {
+            $(taskPage).find('#tblTasks tbody').empty();
             $(taskPage).find('#userId').empty();
+
             $.ajax({
                 type: 'POST',
                 url: 'TaskServlet',
                 data: {
-                    method: 'findUsers',
+                    method: 'init',
                 },
-                success: function(users){
-                    console.log(users);
-                    $.each(users, function (index, user) {
-                        $('#taskUser').tmpl(user).appendTo($(taskPage).find('#userId'));
-                    });
+                success: function(response){
+                    if(response != "error"){
+                        $.each(response.users, function (index, user) {
+                            $('#taskUser').tmpl(user).appendTo($(taskPage).find('#userId'));
+                        });
+
+                        response.tasks.sort(function(o1, o2) {
+                            return Date.parse(o1.requiredBy).compareTo(Date.parse(o2.requiredBy));
+                        });
+                        $.each(response.tasks, function(index, task) {
+                            if (!task.complete) {
+                                task.complete = false;
+                            }
+                            $('#taskRow').tmpl(task).appendTo($(taskPage).find('#tblTasks tbody'));
+                            taskCountChanged();
+                            renderTable();
+                        });
+                    }
+                    else {
+                        console.log(response);
+                    }
                 }
             })
         }
