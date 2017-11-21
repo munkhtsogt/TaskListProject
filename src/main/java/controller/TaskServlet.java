@@ -6,9 +6,7 @@ import model.Task;
 import model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import utility.HibernateProxyTypeAdapter;
-import utility.HibernateUtil;
-import utility.MockData;
+import utility.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,9 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @WebServlet("/TaskServlet")
 public class TaskServlet extends HttpServlet {
@@ -144,6 +140,33 @@ public class TaskServlet extends HttpServlet {
                 out.write(gson.toJson("error"));
                 e.printStackTrace();
             }
+        }
+        else if(method.equals("loadTasks")){
+            String attribute = request.getParameter("attribute");
+            int priority = Integer.valueOf(request.getParameter("priority"));
+            int user = Integer.valueOf(request.getParameter("user"));
+
+            List<Task> tasks = session.createQuery("from Task").list();
+
+            if(priority != 0){
+                if(priority % 2 == 0){
+                    Collections.sort(tasks, (Task a, Task b) -> a.getPriority().compareTo(b.getPriority()));
+                }
+                else {
+                    Collections.sort(tasks, (Task a, Task b) -> b.getPriority().compareTo(a.getPriority()));
+                }
+            }
+
+            if(user != 0){
+                if(user % 2 == 0){
+                    Collections.sort(tasks, (Task a, Task b) -> a.getUser().getUsername().compareTo(b.getUser().getUsername()));
+                }
+                else {
+                    Collections.sort(tasks, (Task a, Task b) -> b.getUser().getUsername().compareTo(a.getUser().getUsername()));
+                }
+            }
+
+            out.write(gson.toJson(tasks));
         }
         session.close();
     }

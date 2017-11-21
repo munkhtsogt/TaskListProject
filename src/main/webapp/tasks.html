@@ -10,6 +10,7 @@
 <script src="resources/scripts/jquery-serialization.js"></script>
 <script src="resources/scripts/tasks-controller.js"></script>
 <script src="resources/scripts/date.js"></script>
+<script src="resources/scripts/jquery.sort.js"></script>
 </head>
 <body>
 	<header>
@@ -64,8 +65,8 @@
 					<th>Name</th>
 					<th>Due</th>
 					<th>Category</th>
-                    <th>Priority</th>
-                    <th>User</th>
+                    <th data-sortable="true" onclick="sort('priority', this);">Priority</th>
+                    <th data-sortable="true" onclick="sort('user', this);">User</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
