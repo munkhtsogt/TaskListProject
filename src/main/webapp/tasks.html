@@ -174,5 +174,17 @@ if (window.indexedDB) {
     ${username}
 </option>
 </script>
+<script id="teamRow" type="text/x-jQuery-tmpl">
+<tr id="team${id}">
+	<td>${name}</td>
+	<td>${users}</td>
+	<td>
+		<nav>
+			<a href="#" class="editRow" data-team-id="${id}">Edit</a>
+			<a href="#" class="deleteRow" data-team-id="${id}">Delete</a>
+		</nav>
+	</td>
+</tr>
+</script>
 </html>
 
