@@ -26,7 +26,7 @@ public class TaskServlet extends HttpServlet {
         User user = new User();
         user.setUsername("Mogi");
         user.setEmail("munkhuu48@gmail.com");
-        
+
         PrintWriter out = response.getWriter();
         String JSONtasks;
         List<Task> taskList = new MockData().retrieveTaskList();

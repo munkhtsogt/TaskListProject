@@ -16,12 +16,9 @@ public class MockData {
 
     public ArrayList<Task> retrieveTaskList() {
 
-        User user1 = new User();
-        User user2 = new User();
-        User user3 = new User();
-        //taskList.add(new Task("first task", "2017-11-19", "Personal", PRIORITY.LOW));
-        //taskList.add(new Task("second task", "2017-11-23", "Work", PRIORITY.LOW));
-        //taskList.add(new Task("third task", "2017-12-19", "Work", PRIORITY.LOW));
+        taskList.add(new Task("first task", "2017-11-19", "Personal"));
+        taskList.add(new Task("second task", "2017-11-23", "Work"));
+        taskList.add(new Task("third task", "2017-12-19", "Work"));
 
         return taskList;
     }

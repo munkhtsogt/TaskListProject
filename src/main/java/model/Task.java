@@ -21,6 +21,12 @@ public class Task implements Serializable {
         this.user = null;
     }
 
+    public Task(String name, String dueDate, String category){
+        this.name = name;
+        this.dueDate = dueDate;
+        this.category = category;
+    }
+
     public long getId() {
         return id;
     }
