@@ -1,37 +1,36 @@
 package model;
 
-public class Task {
+import javax.persistence.*;
+import java.io.Serializable;
 
-    private int id;
+@Entity
+public class Task implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(unique=true, nullable=false)
+    private long id;
+    @OneToOne
     private User user;
-    private String task;
+    private String name;
     private String dueDate;
     private String category;
     private PRIORITY priority;
 
-    public Task(int id, User user, String task, String dueDate, String category, PRIORITY priority) {
-        this.id = id;
-        this.user = user;
-        this.task = task;
-        this.dueDate = dueDate;
-        this.category = category;
-        this.priority = priority;
+    public Task(){
+        this.user = null;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public String getName() {
+        return name;
     }
 
-    public String getTask() {
-        return task;
-    }
-
-    public void setTask(String task) {
-        this.task = task;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDueDate() {

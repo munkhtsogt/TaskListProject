@@ -1,25 +1,27 @@
 package model;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Team {
+@Entity
+public class Team implements Serializable {
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(unique=true, nullable=false)
     private long id;
     private String name;
+    @OneToMany
     private List<User> users;
 
-    public Team(long id, String name) {
-        this.id = id;
-        this.name = name;
-        users = new ArrayList<>();
+    public Team()
+    {
+        this.users = new ArrayList<>();
     }
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getName() {

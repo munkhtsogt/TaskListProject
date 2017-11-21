@@ -1,19 +1,24 @@
 package model;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {
+@Entity
+public class User implements Serializable {
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(unique=true, nullable=false)
     private long id;
     private String username;
     private String email;
+
+    @OneToMany
     private List<Team> teams;
 
-    public User(long id, String username, String email) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.teams = new ArrayList<>();
+    public User(){
+        teams = new ArrayList<>();
     }
 
     public void addTeam(Team team){
@@ -30,10 +35,6 @@ public class User {
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getUsername() {
