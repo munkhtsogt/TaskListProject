@@ -79,6 +79,11 @@ tasksController = function() {
                     retrieveTasksServer();
                 });
 
+                $(taskPage).find('#addTeam').click(function(evt) {
+                    evt.preventDefault();
+                    $('#teamSection').toggle();
+                });
+
                 $(taskPage).find('#tblTasks tbody').on('click', 'tr', function(evt) {
                     $(evt.target).closest('td').siblings().andSelf().toggleClass('rowHighlight');
                 });
@@ -244,6 +249,7 @@ tasksController = function() {
         loads: function () {
             $(taskPage).find('#tblTasks tbody').empty();
             $(taskPage).find('#userId').empty();
+            $('#teamForm #users').empty();
 
             $.ajax({
                 type: 'POST',
@@ -255,6 +261,12 @@ tasksController = function() {
                     if(response != "error"){
                         $.each(response.users, function (index, user) {
                             $('#taskUser').tmpl(user).appendTo($(taskPage).find('#userId'));
+
+                            var option = $('<option>', {
+                                text: user.username,
+                                val: user.id
+                            });
+                            $('#teamForm #users').append(option);
                         });
 
                         response.tasks.sort(function(o1, o2) {

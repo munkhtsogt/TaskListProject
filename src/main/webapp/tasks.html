@@ -11,6 +11,7 @@
 <script src="resources/scripts/tasks-controller.js"></script>
 <script src="resources/scripts/date.js"></script>
 <script src="resources/scripts/jquery.sort.js"></script>
+<script src="resources/scripts/team-controller.js"></script>
 </head>
 <body>
 	<header>
@@ -76,8 +77,48 @@
 		<nav>
 			<a href="#" id="btnAddTask">Add task</a>
 			<a href="#" id="btnRetrieveTasks">Retrieve tasks from server</a>
+            <a href="#" id="addTeam">Add team</a>
 		</nav>
 	</section>
+    <section id="teamSection" style="display: none;">
+        <form id="teamForm">
+            <input type="hidden" name="id" value="" />
+            <div>
+                <label>Team name</label>
+                <input type="text" class="large" name="name" placeholder="Team name" maxlength="200" required />
+            </div>
+            <div>
+                <label>Team users</label>
+                <select id="users" name="users[]" multiple required></select>
+            </div>
+            <nav>
+                <a href="#" id="saveTeam">Save team</a>    <!-- https://stackoverflow.com/questions/4855168/what-is-href-and-why-is-it-used -->
+                <a href="#" id="clearTeam">Clear team</a>
+            </nav>
+        </form>
+        <br />
+        <table id="tblTeams">
+            <colgroup>
+                <col width="33%">
+                <col width="33%">
+                <col width="33%">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Users
+                    </th>
+                    <th>
+                        Action
+                    </th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
 	</main>
 	<footer>You have <span id="taskCount"></span> tasks</footer>
 </body>
