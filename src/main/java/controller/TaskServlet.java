@@ -21,8 +21,7 @@ import java.util.*;
 public class TaskServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        SessionFactory factory = HibernateUtil.getSessionFactory();
-        Session session = factory.openSession();
+        Session session = DbSession.INSTANCE.getInstance();
 
         GsonBuilder gb = new GsonBuilder();
         gb.registerTypeAdapterFactory(HibernateProxyTypeAdapter.FACTORY);
@@ -176,7 +175,6 @@ public class TaskServlet extends HttpServlet {
 
             out.write(gson.toJson(tasks));
         }
-        session.close();
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
