@@ -22,7 +22,7 @@ Built with:
   <li>MySQL >= 5.5</li>
 </ul>
 
-<p>git clone https://github.com/munkhtsogt/ichat.git</p>
+<p>git clone https://github.com/munkhtsogt/TaskListProject</p>
 <p><b>Run</b></p>
 <p>Tomcat</p>
 <p>Now open this URL in your browser:</p>
