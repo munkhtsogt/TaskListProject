@@ -250,6 +250,7 @@ tasksController = function() {
             $(taskPage).find('#tblTasks tbody').empty();
             $(taskPage).find('#userId').empty();
             $('#teamForm #users').empty();
+            $('#tblTeams tbody').empty();
 
             $.ajax({
                 type: 'POST',
@@ -280,6 +281,29 @@ tasksController = function() {
                             taskCountChanged();
                             renderTable();
                         });
+
+                        $.each(response.teams, function(index, team){
+                            var tr = $('<tr>', { id: 'team' + team.id });
+                            var td1 = $('<td>', { text: team.name });
+                            var spans = "";
+                            $.each(team.users, function(i, v){
+                                var span = '<span>' + v.username + '</span>';
+                                spans += span + ", ";
+                            })
+                            var td2 = $('<td>', { html: spans });
+
+                            var actions = '<nav>' +
+                                '<a href="#" class="editTeam" data-team-id="' + team.id + '">Edit</a>' +
+                                '<a href="#" class="deleteTeam" data-team-id="' + team.id + '">Delete</a>' +
+                                '<a href="#" class="filterTeam" data-team-id="' + team.id + '">Filter</a>' +
+                                '</nav>';
+
+                            var td3 = $('<td>', { html: actions });
+                            tr.append(td1);
+                            tr.append(td2);
+                            tr.append(td3);
+                            $('#tblTeams tbody').append(tr);
+                        })
                     }
                     else {
                         console.log(response);

@@ -16,23 +16,11 @@ public class User implements Serializable {
     private String phone;
     private String address;
 
-    @OneToMany
-    private List<Team> teams;
+    //@ManyToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    //private List<Team> teams;
 
     public User(){
-        teams = new ArrayList<>();
-    }
-
-    public void addTeam(Team team){
-        this.teams.add(team);
-    }
-
-    public List<Team> getTeams() {
-        return teams;
-    }
-
-    public void setTeams(List<Team> teams) {
-        this.teams = teams;
+        //teams = new ArrayList<>();
     }
 
     public long getId() {

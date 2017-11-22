@@ -15,7 +15,7 @@
 </head>
 <body>
 	<header>
-		<span>Task list</span>
+        <span id="loading"><img src="resources/images/loading.gif" alt="loading"></span> <span>Task list</span>
 	</header>
 	<main  id="taskPage">
 	<section id="taskCreation" class="not">
@@ -77,10 +77,10 @@
 		<nav>
 			<a href="#" id="btnAddTask">Add task</a>
 			<a href="#" id="btnRetrieveTasks">Retrieve tasks from server</a>
-            <a href="#" id="addTeam">Add team</a>
+            <a href="#" id="addTeam">Team toggle</a>
 		</nav>
 	</section>
-    <section id="teamSection" style="display: none;">
+    <section id="teamSection" style="display: block;">
         <form id="teamForm">
             <input type="hidden" name="id" value="" />
             <div>
@@ -173,18 +173,6 @@ if (window.indexedDB) {
 <option value="${id}">
     ${username}
 </option>
-</script>
-<script id="teamRow" type="text/x-jQuery-tmpl">
-<tr id="team${id}">
-	<td>${name}</td>
-	<td>${users}</td>
-	<td>
-		<nav>
-			<a href="#" class="editRow" data-team-id="${id}">Edit</a>
-			<a href="#" class="deleteRow" data-team-id="${id}">Delete</a>
-		</nav>
-	</td>
-</tr>
 </script>
 </html>
 

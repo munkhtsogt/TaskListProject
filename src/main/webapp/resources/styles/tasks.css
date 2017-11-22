@@ -135,3 +135,15 @@ label.error {
 .taskCompleted {
 	text-decoration: line-through;
 }
+
+#loading{
+	visibility: hidden;
+    padding-top: 18px;
+    position: absolute;
+    margin-left: -55px;
+}
+
+#loading img {
+    width: 50px;
+    height: 50px;
+}

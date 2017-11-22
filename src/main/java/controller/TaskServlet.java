@@ -3,6 +3,7 @@ package controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import model.Task;
+import model.Team;
 import model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -35,6 +36,7 @@ public class TaskServlet extends HttpServlet {
             try{
                 List<User> users = session.createQuery("from User").list();
                 List<Task> tasks = session.createQuery("from Task").list();
+                List<Team> teams = session.createQuery("from Team").list();
                 if(users.isEmpty()){
                     User user = new User();
                     user.setUsername("Mogi");
@@ -59,6 +61,7 @@ public class TaskServlet extends HttpServlet {
                 Map<String,Object> map = new HashMap<String,Object>();
                 map.put("tasks", tasks);
                 map.put("users", users);
+                map.put("teams", teams);
                 out.write(gson.toJson(map));
             } catch (Exception e){
                 out.write(gson.toJson("error"));
@@ -174,6 +177,27 @@ public class TaskServlet extends HttpServlet {
             }
 
             out.write(gson.toJson(tasks));
+        }
+        else if(method.equals("filterByTeam")){
+            Long teamId = Long.valueOf(request.getParameter("teamId"));
+            try {
+                Team team = session.load(Team.class, teamId);
+                List<Task> tasks = new ArrayList<>();
+                for(User user: team.getUsers()){
+                    String hql = "FROM Task T WHERE T.user.id = " + user.getId();
+                    List<Task> results = session.createQuery(hql).list();
+                    for(Task task: results){
+                        if(!tasks.contains(task)){
+                            tasks.add(task);
+                        }
+                    }
+                }
+                out.write(gson.toJson(tasks));
+            } catch (Exception e){
+                out.println(gson.toJson("error"));
+                e.printStackTrace();
+            }
+
         }
     }
 

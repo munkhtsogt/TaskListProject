@@ -12,7 +12,11 @@ public class Team implements Serializable {
     @Column(unique=true, nullable=false)
     private long id;
     private String name;
-    @OneToMany
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "team_users",
+    joinColumns = @JoinColumn(name = "team_id"),
+    inverseJoinColumns = @JoinColumn(name="users_id"))
     private List<User> users;
 
     public Team()
