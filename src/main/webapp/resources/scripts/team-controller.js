@@ -66,7 +66,7 @@ $(function(){
 
     $(document).on('click', '#tblTeams .editTeam', function(){
         var self = $(this);
-        self.parents().find('tr > td').addClass('rowHighlight');
+        self.parent().parent().parent().find('td').addClass('rowHighlight');
         $.ajax({
             type: "POST",
             url: 'TeamServlet',
@@ -117,7 +117,7 @@ $(function(){
 
     $(document).on('click', '#tblTeams .filterTeam', function(){
         var self = $(this);
-        self.parents().find('tr > td').addClass('rowHighlight');
+        self.parent().parent().parent().find('td').addClass('rowHighlight');
         $.ajax({
             type: 'POST',
             url: 'TaskServlet',
