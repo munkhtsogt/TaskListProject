@@ -23,8 +23,8 @@ Built with:
 </ul>
 <p><b>Clone</b></p>
 <p>git clone https://github.com/munkhtsogt/TaskListProject</p>
-<p><b>DataBase</b></p>
-<p>CREATE DATABASE NAMED AS tasklistdb ON MYSQL</p>
+<p><b>Database</b></p>
+<p>CREATE DATABASE NAMED AS <b>tasklistdb<b> ON MYSQL</p>
 <p><b>Run</b></p>
 <p>Tomcat</p>
 <p>Now open this URL in your browser:</p>
