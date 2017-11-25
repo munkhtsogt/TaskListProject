@@ -21,8 +21,10 @@ Built with:
   <li>javascript</li>
   <li>MySQL >= 5.5</li>
 </ul>
-
+<p><b>Clone</b></p>
 <p>git clone https://github.com/munkhtsogt/TaskListProject</p>
+<p><b>Create DB</b></p>
+<p>CREATE DATABASE tasklistdb;</p>
 <p><b>Run</b></p>
 <p>Tomcat</p>
 <p>Now open this URL in your browser:</p>
